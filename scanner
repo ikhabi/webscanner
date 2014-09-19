@@ -1,0 +1,31 @@
+#! /usr/bin/pythonI
+import subprocess
+import re
+
+def worpresscan(targetsite):
+ print ("Scanning "+targetsite+" using wpscan")
+ wpscan=subprocess.Popen(["wpscan","--url", targetsite,"--follow-redirection"],stdout=subprocess.PIPE)
+ scanoutput=wpscan.communicate()
+ print scanoutput
+ outfile.write(""+str(scanoutput))
+ print "Scan has been finished"
+def joomscan(targetsite):
+  print "Scanning "+targetsite+" using joomscan\n"
+  #joomscan=subprocess.Popen(["joomscan -u targetsite -oh"],stdout.subprocess.PIPE)
+
+def nikto(targetsite):
+ nikto=subprocess.Popen(["nikto -h  targetsite"],stdout.subprocess.PIPE)
+ #print "Scanning "+targetsite+" using nikto"
+
+targetsite=raw_input("Enter your domain\n")
+
+outfile=open("targetsite.txt","w")
+print "Starting whatweb to detect cms"
+scanner=subprocess.Popen(["whatweb", targetsite], stdout=subprocess.PIPE)
+output, err = scanner.communicate()
+
+Joomla = re.compile("Joomla|joomla")
+joommatch=Joomla.search(output)
+
+wordpress=re.compile("Wordpress|WordPress")
+wordpmatch=wordpress.search(output)
