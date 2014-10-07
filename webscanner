@@ -1,0 +1,60 @@
+#! /usr/bin/pythonI
+import subprocess
+import re
+
+targetsite=raw_input("Enter your domain\n")
+outfile=open(targetsite+".txt","w")
+
+def worpresscan(targetsite):
+ print ("Scanning "+targetsite+" using wpscan")
+ wpscan=subprocess.Popen(["wpscan","--url", targetsite,"--follow-redirection","|","sed","-r","'s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g'"],stdout=subprocess.PIPE)
+ scanoutput=wpscan.communicate()
+ scanprint=str(scanoutput).strip()
+ print scanprint
+ outfile.write(scanprint)
+ print "Scan has been finished"
+
+def joomscan(targetsite):
+  print "Scanning "+targetsite+" using joomscan\n"
+  joomscan=subprocess.Popen(["joomscan","-u", targetsite,"-oh"],stdout=subprocess.PIPE)
+  scanoutput=joomscan.communicate()
+  scanoutput=str(scanoutput).strip()
+  print scanoutput
+  outfile.write(scanoutput)
+  print "Scan has been finished"
+
+def nikto(targetsite):
+ nikto=subprocess.Popen(["nikto -h  targetsite"],stdout.subprocess.PIPE)
+ scanoutput=nikto.communicate()
+ scanoutput=str(scanoutput).strip()
+ print scanoutput
+ outfile.write(scanoutput)
+ print "Scan has been finished"
+
+scanner=subprocess.Popen(["whatweb", targetsite], stdout=subprocess.PIPE)
+output, err = scanner.communicate()
+
+Joomla = re.compile("Joomla|joomla")
+joommatch=Joomla.search(output)
+
+wordpress=re.compile("Wordpress|WordPress")
+wordpmatch=wordpress.search(output)
+
+match = 0
+
+while match==0:
+ if joommatch:
+  print "Joomla CMS Detected\n"
+  match=1
+  joomscan(targetsite)
+  break
+ if wordpmatch:
+  print "Wordpress Detected"
+  match=1
+  worpresscan(targetsite)
+  break 
+else:
+ 
+ print "No Cms Detected\n Runninng Scan using Nikto\n",match
+
+
